@@ -6,3 +6,6 @@ __pycache__
 # tests
 .pytest_cache
 htmlcov
+
+# data
+logs
