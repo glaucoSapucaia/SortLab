@@ -3,10 +3,13 @@ from sortlab.errors import LinksPDFException
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
-from paths import (
-    LINK_FOLDER as html_folder,
-    TEMP_LINK_PAGE as temp_link
-)
+
+from paths import config
+
+html_folder = config.get_path('LINK_FOLDER')
+temp_link = config.get_path('TEMP_LINK_PAGE')
+
+
 from typing import TYPE_CHECKING
 import inspect
 import os

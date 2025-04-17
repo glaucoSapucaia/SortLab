@@ -1,10 +1,10 @@
 from logger import logger
-from paths import (
-    get_static_images,
-    get_interactive_images,
-    FINAL_PDF_PATH as pdf_output,
-    TEMP_PDF_PATH as pdf_temp_path
-)
+
+from paths import config
+
+pdf_output = config.get_path('FINAL_PDF_PATH')
+pdf_temp_path = config.get_path('TEMP_PDF_PATH')
+
 from sortlab.errors import ImageSaveException, ImageSearchException, ReportException
 from sortlab.scripts.html_link_page import generate_html_links_page
 from typing import TYPE_CHECKING
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 def get_image_paths() -> list[str]:
     try:
         logger.info("Buscando imagens estáticas e interativas.")
-        result = get_static_images() + get_interactive_images()
+        result = config.get_static_images() + config.get_interactive_images()
         logger.info(f"Imagens encontradas: {result}")
         return result
     except Exception as e:

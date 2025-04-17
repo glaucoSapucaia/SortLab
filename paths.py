@@ -1,48 +1,66 @@
+import os
 from pathlib import Path
+from typing import Any
 
-# Diretórios principais do projeto
-try:
-    ############################## BASE ##############################
+class EnvConfig:
+    """Gerenciador de configurações e paths do projeto."""
+    
+    def __init__(self):
+        self.BASE_DIR = Path(__file__).resolve().parent
+        self.PROJECT_ROOT = self.BASE_DIR / 'sortlab'
+        
+        # Paths principais
+        data_dir = self.PROJECT_ROOT / 'data'
+        plots_dir = data_dir / 'plots'
+        logs_dir = self.PROJECT_ROOT / 'logs'
+        
+        # Estrutura de diretórios
+        self.REPORT_FILE = data_dir / 'relatorio_completo.pdf'
+        self.TEMP_FOLDER = data_dir
+        self.STATIC_FOLDER = plots_dir / 'static'
+        self.INTERACTIVE_IMAGES_FOLDER = plots_dir / 'interactive' / 'images'
+        self.FINAL_PDF_PATH = data_dir / 'relatorio_completo.pdf'
+        self.TEMP_PDF_PATH = data_dir / 'temp_graficos.pdf'
+        self.LINK_FOLDER = plots_dir / 'interactive' / 'html'
+        self.LINKS_PAGE = plots_dir / 'interactive' / 'links.html'
+        self.TEMP_LINK_PAGE = data_dir / 'temp_links_page.pdf'
+        self.LOG_DIR = logs_dir
+        self.LOG_FILE = logs_dir / 'app.log'
+        self.ERROR_LOG_FILE = logs_dir / 'error.log'
+        self.WARNING_LOG_FILE = logs_dir / 'warning.log'
+        
+        self._validate_paths()
+    
+    def _validate_paths(self) -> None:
+        """Verifica diretórios essenciais."""
+        if not self.BASE_DIR.exists():
+            raise FileNotFoundError(f"Diretório base não encontrado: {self.BASE_DIR}")
+        if not self.PROJECT_ROOT.exists():
+            raise FileNotFoundError(f"Diretório do projeto não encontrado: {self.PROJECT_ROOT}")
+    
+    def get(self, key: str, default: Any = None) -> Any:
+        """Obtém configuração dinamicamente."""
+        try:
+            return getattr(self, key)
+        except AttributeError:
+            return os.getenv(key, default)
+    
+    def get_path(self, key: str) -> Path:
+        """Obtém path garantido como objeto Path."""
+        value = self.get(key)
+        if value is None:
+            raise KeyError(f"Configuração não encontrada: {key}")
+        return Path(value) if not isinstance(value, Path) else value
+    
+    def get_static_images(self) -> list[Path]:
+        return list(self.STATIC_FOLDER.glob("*.png"))
+    
+    def get_interactive_images(self) -> list[Path]:
+        return list(self.INTERACTIVE_IMAGES_FOLDER.glob("*.png"))
+    
+    def set_env(self, key: str, value: str) -> None:
+        """Define variável de ambiente."""
+        os.environ[key] = value
 
-    BASE_DIR = Path(__file__).resolve().parent
-    PROJECT_ROOT = BASE_DIR / 'sortlab'
-    REPORT_FILE = PROJECT_ROOT / 'data' / 'relatorio_completo.pdf'
-
-    ############################## PLOTS ##############################
-
-    TEMP_FOLDER = PROJECT_ROOT / 'data'
-    STATIC_FOLDER = PROJECT_ROOT / 'data' / 'plots' / 'static'
-    INTERACTIVE_IMAGES_FOLDER = PROJECT_ROOT / 'data' / 'plots' / 'interactive' / 'images'
-
-    def get_static_images() -> list[Path]:
-        return list(STATIC_FOLDER.glob("*.png"))
-
-    def get_interactive_images() -> list[Path]:
-        return list(INTERACTIVE_IMAGES_FOLDER.glob("*.png"))
-
-    ############################## PDF REPORTS ##############################
-
-    FINAL_PDF_PATH = PROJECT_ROOT / 'data' / f"relatorio_completo.pdf"
-    TEMP_PDF_PATH = PROJECT_ROOT / 'data' / 'temp_graficos.pdf'
-
-    ############################## LINKS (HTML) REPORTS ##############################
-
-    LINK_FOLDER = PROJECT_ROOT / 'data' / 'plots' / 'interactive' / 'html'
-    LINKS_PAGE = PROJECT_ROOT / 'data' / 'plots' / 'interactive' / 'links.html'
-    TEMP_LINK_PAGE = PROJECT_ROOT / 'data' / 'temp_links_page.pdf'
-
-    ############################## LOGS #############################
-
-    LOG_DIR = PROJECT_ROOT / 'logs'
-    LOG_FILE = LOG_DIR / "app.log"
-    ERROR_LOG_FILE = LOG_DIR / 'error.log'
-    WARNING_LOG_FILE = LOG_DIR / 'warning.log'
-
-    # Verificar se os diretórios existem
-    if not BASE_DIR.exists():
-        raise FileNotFoundError(f"O diretório base {BASE_DIR} não foi encontrado.")
-    if not PROJECT_ROOT.exists():
-        raise FileNotFoundError(f"O diretório do projeto {PROJECT_ROOT} não foi encontrado.")
-
-except Exception as e:
-    raise RuntimeError("Erro ao configurar os diretórios") from e
+# Instância global
+config = EnvConfig()

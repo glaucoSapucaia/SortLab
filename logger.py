@@ -20,12 +20,14 @@ de log recebam apenas mensagens de um nível exato.
 import logging
 import os
 
-from paths import (
-    LOG_DIR as log_folder,
-    LOG_FILE as all_logs,
-    WARNING_LOG_FILE as warning_logs,
-    ERROR_LOG_FILE as error_logs
-)
+from paths import config
+
+
+# paths
+log_folder = config.get_path('LOG_DIR')
+all_logs = config.get_path('LOG_FILE')
+warning_logs = config.get_path('WARNING_LOG_FILE')
+error_logs = config.get_path('ERROR_LOG_FILE')
 
 # Criar diretório caso não exista
 os.makedirs(log_folder, exist_ok=True)

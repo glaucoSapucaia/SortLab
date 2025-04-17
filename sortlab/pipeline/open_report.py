@@ -1,6 +1,9 @@
 from logger import logger
 import webbrowser
-from paths import REPORT_FILE as pdf
+
+from paths import config
+
+pdf = config.get_path('REPORT_FILE')
 
 class ReportViewer:
     @staticmethod

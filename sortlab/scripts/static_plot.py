@@ -7,7 +7,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from sortlab.errors import PlotStaticException
-from paths import STATIC_FOLDER as data_folder
+
+from paths import config
+
+data_folder = config.get_path('STATIC_FOLDER')
+
 
 sns.set_theme(style="darkgrid")
 

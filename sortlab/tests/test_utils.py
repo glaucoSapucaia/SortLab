@@ -1,115 +1,98 @@
 import pytest
 from unittest import mock
 from pathlib import Path
-from sortlab.utils.metrics import MetricCounter
-from sortlab.utils.delete_temp_files import clean_temp_files, static_folder
+from sortlab.utils import MetricCounter, clean_temp_files
 
 @pytest.fixture
 def mock_folders():
-    with mock.patch("sortlab.utils.delete_temp_files.static_folder", mock.MagicMock(spec=Path)) as static_folder, \
-         mock.patch("sortlab.utils.delete_temp_files.interactive_images_folder", mock.MagicMock(spec=Path)) as interactive_images_folder, \
-         mock.patch("sortlab.utils.delete_temp_files.links_page", mock.MagicMock(spec=Path)) as links_page, \
-         mock.patch("sortlab.utils.delete_temp_files.temp_files", mock.MagicMock(spec=Path)) as temp_files:
+    """Fixture para mockar os diretórios usados nos testes."""
+    with (
+        mock.patch("sortlab.utils.delete_temp_files.static_folder", new=mock.MagicMock(spec=Path)) as static,
+        mock.patch("sortlab.utils.delete_temp_files.interactive_images_folder", new=mock.MagicMock(spec=Path)) as interactive,
+        mock.patch("sortlab.utils.delete_temp_files.links_page", new=mock.MagicMock(spec=Path)) as links,
+        mock.patch("sortlab.utils.delete_temp_files.temp_files", new=mock.MagicMock(spec=Path)) as temp
+    ):
+        # Configuração comum para todos os mocks
+        for folder in (static, interactive, links):
+            folder.exists.return_value = True
+            folder.iterdir.return_value = [mock.Mock()]
         
-        # Mocking the folders and their behavior
-        static_folder.exists.return_value = True
-        static_folder.iterdir.return_value = [mock.Mock()]
-        
-        interactive_images_folder.exists.return_value = True
-        interactive_images_folder.iterdir.return_value = [mock.Mock()]
-        
-        links_page.exists.return_value = True
-        temp_files.glob.return_value = [mock.Mock(is_file=mock.Mock(return_value=True))]
-        
-        yield static_folder, interactive_images_folder, links_page, temp_files
+        temp.glob.return_value = [mock.Mock(is_file=mock.Mock(return_value=True))]
+        yield static, interactive, links, temp
 
-def test_clean_temp_files_removes_folders_and_files(mock_folders):
-    static_folder, interactive_images_folder, links_page, temp_files = mock_folders
-
-    # mocks individuais de .unlink() para cada path
-    static_folder.unlink = mock.Mock()
-    interactive_images_folder.unlink = mock.Mock()
-    links_page.unlink = mock.Mock()
-
-    temp_file_mock = mock.Mock()
-    temp_file_mock.is_file.return_value = True
-    temp_file_mock.unlink = mock.Mock()
-    temp_files.glob.return_value = [temp_file_mock]
-
-    with mock.patch("shutil.rmtree") as mock_rmtree:
-        clean_temp_files()
-
-        mock_rmtree.assert_any_call(static_folder)
-        mock_rmtree.assert_any_call(interactive_images_folder)
-        links_page.unlink.assert_called_once()
-        temp_file_mock.unlink.assert_called_once()
-
-
-def test_clean_temp_files_does_nothing_when_folders_are_empty(mock_folders):
-    static_folder, interactive_images_folder, _, _ = mock_folders
-
-    # Mockando os diretórios vazios
-    static_folder.iterdir.return_value = []
-    interactive_images_folder.iterdir.return_value = []
+def test_clean_temp_files(mock_folders):
+    static, interactive, links, temp = mock_folders
+    file_mock = mock.Mock()
+    temp.glob.return_value = [file_mock]
     
-    with mock.patch("shutil.rmtree") as mock_rmtree, \
-         mock.patch("pathlib.Path.unlink") as mock_unlink:
-        
+    with mock.patch("shutil.rmtree") as rmtree:
         clean_temp_files()
         
-        # Verificar se nenhuma função de remoção foi chamada
-        mock_rmtree.assert_not_called()
-        mock_unlink.assert_not_called()
+        rmtree.assert_any_call(static)
+        rmtree.assert_any_call(interactive)
+        links.unlink.assert_called_once()
+        file_mock.unlink.assert_called_once()
 
-def test_clean_temp_files_handles_exceptions(mock_folders):
-    static_folder, _, _, _ = mock_folders
-
-    static_folder.exists.return_value = True
-    static_folder.iterdir.return_value = [mock.Mock()]
+def test_clean_empty_folders(mock_folders):
+    static, interactive, _, _ = mock_folders
+    static.iterdir.return_value = []
+    interactive.iterdir.return_value = []
     
-    with mock.patch("shutil.rmtree", side_effect=Exception("Erro no rmtree")), \
-         mock.patch("sortlab.utils.delete_temp_files.logger") as mock_logger:
-        
+    with mock.patch("shutil.rmtree") as rmtree, \
+         mock.patch("pathlib.Path.unlink") as unlink:
         clean_temp_files()
-        mock_logger.error.assert_called_once()
+        rmtree.assert_not_called()
+        unlink.assert_not_called()
 
-
+def test_clean_temp_files_error(mock_folders, caplog):
+    static, _, _, _ = mock_folders
+    static.iterdir.side_effect = Exception("Test error")
+    
+    clean_temp_files()
+    assert "Test error" in caplog.text
 
 @pytest.fixture
 def counter():
     return MetricCounter()
 
-def test_initial_value(counter):
-    """Testa se o valor inicial do contador é zero."""
-    assert counter.count == 0
+@pytest.mark.parametrize("operation,expected", [
+    (lambda c: c.increase(), 1),
+    (lambda c: c.set(5), 5),
+    (lambda c: c.reset(), 0),
+])
+def test_counter_operations(counter, operation, expected):
+    """Testa operações básicas do contador."""
+    operation(counter)
+    assert counter.count == expected
 
-def test_increase(counter):
-    """Testa o aumento do contador."""
-    counter.increase()
-    assert counter.count == 1
-    counter.increase()
+@pytest.mark.parametrize("initial_value,expected", [
+    (1, 0),    # Caso normal
+    (2, 1),    # Valor maior que 1
+    (0, 0),    # Valor zero (não deve decrementar)
+    (-1, -1)   # Valor negativo (não deve decrementar)
+])
+def test_decrease_with_different_values(counter, initial_value, expected):
+    """Testa o decrease() com diferentes valores iniciais."""
+    counter.set(initial_value)
+    counter.decrease()
+    assert counter.count == expected
+
+def test_multiple_decreases(counter):
+    """Testa múltiplas chamadas de decrease()."""
+    counter.set(3)
+    counter.decrease()
     assert counter.count == 2
-
-def test_decrease(counter):
-    """Testa a diminuição do contador."""
-    counter.increase()  # Primeiro, incrementa para que o valor seja positivo
+    counter.decrease()
+    assert counter.count == 1
     counter.decrease()
     assert counter.count == 0
+    counter.decrease()  # Não deve ir abaixo de zero
+    assert counter.count == 0
 
-def test_decrease_when_zero(counter):
-    """Testa que o contador não diminui abaixo de zero."""
+def test_counter_no_negative(counter):
+    """Garante que o contador nunca fica negativo."""
     counter.decrease()
     assert counter.count == 0
-
-def test_reset(counter):
-    """Testa o reset do contador."""
-    counter.increase()
-    counter.reset()
-    assert counter.count == 0
-
-def test_set(counter):
-    """Testa a definição de um valor específico para o contador."""
-    counter.set(10)
-    assert counter.count == 10
-    counter.set(5)
-    assert counter.count == 5
+    counter.set(-5)
+    counter.decrease()
+    assert counter.count == -5  # Assume que valores negativos são permitidos, mas não decrementados

@@ -1,12 +1,13 @@
 import shutil
 from logger import logger
 
-from paths import (
-    STATIC_FOLDER as static_folder,
-    INTERACTIVE_IMAGES_FOLDER as interactive_images_folder,
-    LINKS_PAGE as links_page,
-    TEMP_FOLDER as temp_files
-)
+from paths import config
+
+static_folder = config.get_path('STATIC_FOLDER')
+interactive_images_folder = config.get_path('INTERACTIVE_IMAGES_FOLDER')
+links_page = config.get_path('LINKS_PAGE')
+temp_files = config.get_path('TEMP_FOLDER')
+
 
 def clean_temp_files() -> None:
     try:
