@@ -23,8 +23,7 @@
 Clone o repositório:
 
 ```bash
-git clone https://github.com/seu-usuario/sortlab.git
-cd sortlab
+git clone https://github.com/seu-usuario/sortlab.git .
 ```
 
 Instale as dependências:
