@@ -48,7 +48,7 @@ class ExactLevelFilter(logging.Filter):
 
 # ==================== CONFIGURAÇÃO DO LOGGER ====================
 
-logger = logging.getLogger("DataWeaver")
+logger = logging.getLogger("SortLab")
 logger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")

@@ -6,8 +6,9 @@ import os
 os.environ['PYTHONPATH'] = str(config.get_path('PROJECT_ROOT'))
 
 # Executa o pytest diretamente (isso roda no mesmo processo)
+# Altere o valor dos módulos para os testes!
 pytest.main([
-    '--cov=sortlab.utils',
+    '--cov=sortlab.pipeline',
     '--cov-report=html',
     'sortlab/tests'
 ])
