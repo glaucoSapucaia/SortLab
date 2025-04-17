@@ -1,33 +1,17 @@
-"""
-Configuração do logger principal da aplicação DataWeaver.
+from .paths import config
 
-Este módulo configura um logger com múltiplos *handlers* para registrar logs em diferentes arquivos,
-de acordo com o nível da mensagem:
-
-- app.log: registra todas as mensagens (INFO, WARNING, ERROR)
-- warning.log: registra apenas mensagens de nível WARNING
-- error.log: registra apenas mensagens de nível ERROR
-- console: exibe mensagens a partir do nível INFO
-
-A codificação dos arquivos de log é UTF-8 para evitar problemas com caracteres especiais.
-
-Antes da configuração, o módulo garante que o diretório de logs existe, criando-o se necessário.
-
-Também define a classe `ExactLevelFilter`, utilizada para garantir que certos arquivos
-de log recebam apenas mensagens de um nível exato.
-"""
-
+from typing import Literal
 import logging
 import os
 
-from .paths import config
+LogLevel = int | str  # Type alias para níveis de log
 
+# ==================== Paths ====================
 
-# paths
-log_folder = config.get_path('LOG_DIR')
-all_logs = config.get_path('LOG_FILE')
-warning_logs = config.get_path('WARNING_LOG_FILE')
-error_logs = config.get_path('ERROR_LOG_FILE')
+log_folder = config.get_path("LOG_DIR")
+all_logs = config.get_path("LOG_FILE")
+warning_logs = config.get_path("WARNING_LOG_FILE")
+error_logs = config.get_path("ERROR_LOG_FILE")
 
 # Criar diretório caso não exista
 os.makedirs(log_folder, exist_ok=True)
@@ -38,13 +22,15 @@ if not log_folder.exists():
 
 # ==================== FILTRO DE NÍVEL EXATO ====================
 
+
 class ExactLevelFilter(logging.Filter):
-    def __init__(self, level):
+    def __init__(self, level: LogLevel) -> None:
         super().__init__()
         self.level = level
 
-    def filter(self, record):
+    def filter(self, record: logging.LogRecord) -> Literal[True, False]:
         return record.levelno == self.level
+
 
 # ==================== CONFIGURAÇÃO DO LOGGER ====================
 

@@ -7,6 +7,14 @@ from .links_pdf_error import LinksPDFException
 from .plot_errors import PlotInteractiveException, PlotStaticException
 from .metrics_error import MetricsException
 
-__all__ = ['SortingException', 'EmptyArrException', 'ImageSaveException',
-           'ImageSearchException', 'ReportException', 'LinksPDFException',
-           'PlotInteractiveException', 'PlotStaticException', 'MetricsException']
+__all__ = [
+    "SortingException",
+    "EmptyArrException",
+    "ImageSaveException",
+    "ImageSearchException",
+    "ReportException",
+    "LinksPDFException",
+    "PlotInteractiveException",
+    "PlotStaticException",
+    "MetricsException",
+]

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class IMetricCounter(ABC):
     @abstractmethod
     def increase(self) -> None:

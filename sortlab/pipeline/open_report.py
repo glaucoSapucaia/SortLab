@@ -1,13 +1,14 @@
 from settings.logger import logger
+from settings.paths import config
+
 import webbrowser
 
-from settings.paths import config
 
 class ReportViewer:
     @staticmethod
     def open_report() -> None:
         try:
-            pdf = config.get_path('REPORT_FILE')  # <-- agora está dentro do método
+            pdf = config.get_path("REPORT_FILE")  # <-- agora está dentro do método
             logger.info(f"Abrindo relatório: {pdf}")
             webbrowser.open(str(pdf))
             logger.info("Relatório aberto com sucesso")

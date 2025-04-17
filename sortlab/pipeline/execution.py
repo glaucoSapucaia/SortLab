@@ -1,21 +1,21 @@
-from typing import Optional
-from sortlab.functions import get_sorting_algorithms
-from sortlab.scripts import get_plot_functions
 from .algorithm_executor import AlgorithmExecutor
+from sortlab.functions import get_sorting_algorithms
+from sortlab.scripts import plot_interactive, plot_static
+
 import random
+
 
 class AlgorithmRunner:
     DEFAULT_SIZES = [300, 600, 900, 1200, 1500, 2000]
-    
+
     @staticmethod
     def run_algorithms(
         vector_sizes: list[int],
         base_vector: list[int],
-        executor: Optional[AlgorithmExecutor] = None
+        executor: AlgorithmExecutor | None = None,
     ) -> None:
         executor = executor or AlgorithmExecutor(
-            algorithms=get_sorting_algorithms(),
-            plots=get_plot_functions()
+            algorithms=get_sorting_algorithms(), plots=[plot_static, plot_interactive]
         )
         executor.run(vector_sizes, base_vector)
 

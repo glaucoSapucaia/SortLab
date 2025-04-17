@@ -1,3 +1,3 @@
-from .base import (ISorter)
+from .base import ISorter
 
-__all__ = ['ISorter']
+__all__ = ["ISorter"]

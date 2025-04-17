@@ -1,24 +1,29 @@
+from settings.logger import logger
+from settings.paths import config
+from sortlab.errors import PlotStaticException
+
 import matplotlib
 
-matplotlib.use('QtAgg') # backend alternativo ao tkinter
+matplotlib.use("QtAgg")  # Backend alternativo ao tkinter (Erros com ambiente vrtual)
 
-from settings.logger import logger
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from sortlab.errors import PlotStaticException
-
-from settings.paths import config
-
-data_folder = config.get_path('STATIC_FOLDER')
-
-
 sns.set_theme(style="darkgrid")
 
-def plot_static(vector_sizes: list[int], times: list[float],
-                comparisons: list[int], algorithm_name: str) -> None:
+data_folder = config.get_path("STATIC_FOLDER")
+
+
+def plot_static(
+    vector_sizes: list[int],
+    times: list[float],
+    comparisons: list[int],
+    algorithm_name: str,
+) -> None:
     try:
-        logger.info(f"Iniciando a criação do gráfico estático para o algoritmo {algorithm_name}.")
+        logger.info(
+            f"Iniciando a criação do gráfico estático para o algoritmo {algorithm_name}."
+        )
 
         # Definindo a paleta de cores do Seaborn
         color_palette = sns.color_palette("Set2", 2)
@@ -27,20 +32,40 @@ def plot_static(vector_sizes: list[int], times: list[float],
         _, axes = plt.subplots(1, 2, figsize=(12, 5))
 
         # Plotando o tempo de execução
-        axes[0].plot(vector_sizes, times, marker='o', linestyle='-', color=color_palette[0], linewidth=2, markersize=6)
-        axes[0].set_title(f'Execução - {algorithm_name}', fontsize=16, fontweight='bold')
-        axes[0].set_xlabel('Tamanho do Vetor', fontsize=14)
-        axes[0].set_ylabel('Tempo (s)', fontsize=14)
+        axes[0].plot(
+            vector_sizes,
+            times,
+            marker="o",
+            linestyle="-",
+            color=color_palette[0],
+            linewidth=2,
+            markersize=6,
+        )
+        axes[0].set_title(
+            f"Execução - {algorithm_name}", fontsize=16, fontweight="bold"
+        )
+        axes[0].set_xlabel("Tamanho do Vetor", fontsize=14)
+        axes[0].set_ylabel("Tempo (s)", fontsize=14)
         axes[0].grid(True)
-        axes[0].ticklabel_format(style='plain')  # Evita notação científica
+        axes[0].ticklabel_format(style="plain")  # Evita notação científica
 
         # Plotando as comparações/trocas
-        axes[1].plot(vector_sizes, comparisons, marker='s', linestyle='--', color=color_palette[1], linewidth=2, markersize=6)
-        axes[1].set_title(f'Comparações/Trocas - {algorithm_name}', fontsize=16, fontweight='bold')
-        axes[1].set_xlabel('Tamanho do Vetor', fontsize=14)
-        axes[1].set_ylabel('Comparações/Trocas', fontsize=14)
+        axes[1].plot(
+            vector_sizes,
+            comparisons,
+            marker="s",
+            linestyle="--",
+            color=color_palette[1],
+            linewidth=2,
+            markersize=6,
+        )
+        axes[1].set_title(
+            f"Comparações/Trocas - {algorithm_name}", fontsize=16, fontweight="bold"
+        )
+        axes[1].set_xlabel("Tamanho do Vetor", fontsize=14)
+        axes[1].set_ylabel("Comparações/Trocas", fontsize=14)
         axes[1].grid(True)
-        axes[1].ticklabel_format(style='plain')
+        axes[1].ticklabel_format(style="plain")
 
         # Ajustando o layout para não sobrepor os elementos
         plt.tight_layout()
@@ -53,7 +78,7 @@ def plot_static(vector_sizes: list[int], times: list[float],
             logger.error(f"Erro ao criar diretório {data_folder}: {e}")
             raise PlotStaticException(f"Erro ao criar diretório: {e}")
 
-        output_path = data_folder / f'{algorithm_name}_estatico_.png'
+        output_path = data_folder / f"{algorithm_name}_estatico_.png"
 
         # Salvando a imagem com resolução ajustada
         try:

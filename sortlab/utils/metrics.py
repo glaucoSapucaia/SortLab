@@ -1,10 +1,12 @@
-from settings.logger import logger
+# from settings.logger import logger
 from sortlab.utils.interfaces import IMetricCounter
+
 
 class MetricCounter(IMetricCounter):
     """
     Classe responsável por contar métricas (incrementos, resets e decrementos).
     """
+
     def __init__(self) -> None:
         """
         Inicializa o contador com valor zero.

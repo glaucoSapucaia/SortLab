@@ -1,23 +1,28 @@
-import shutil
 from settings.logger import logger
-
 from settings.paths import config
 
-static_folder = config.get_path('STATIC_FOLDER')
-interactive_images_folder = config.get_path('INTERACTIVE_IMAGES_FOLDER')
-links_page = config.get_path('LINKS_PAGE')
-temp_files = config.get_path('TEMP_FOLDER')
+import shutil
+
+# Paths
+static_folder = config.get_path("STATIC_FOLDER")
+interactive_images_folder = config.get_path("INTERACTIVE_IMAGES_FOLDER")
+links_page = config.get_path("LINKS_PAGE")
+temp_files = config.get_path("TEMP_FOLDER")
 
 
 def clean_temp_files() -> None:
     try:
         # Remover diretório de imagens estáticas (temp gráficos)
-        if static_folder.exists() and any(static_folder.iterdir()):  # Verifica se o diretório não está vazio
+        if static_folder.exists() and any(
+            static_folder.iterdir()
+        ):  # Verifica se o diretório não está vazio
             shutil.rmtree(static_folder)
             logger.info(f"Removido: {static_folder}")
 
         # Remover diretório de imagens interativas (pngs)
-        if interactive_images_folder.exists() and any(interactive_images_folder.iterdir()):  # Verifica se o diretório não está vazio
+        if interactive_images_folder.exists() and any(
+            interactive_images_folder.iterdir()
+        ):  # Verifica se o diretório não está vazio
             shutil.rmtree(interactive_images_folder)
             logger.info(f"Removido: {interactive_images_folder}")
 

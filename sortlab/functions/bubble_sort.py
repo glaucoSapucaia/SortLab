@@ -1,7 +1,5 @@
-from settings.logger import logger
-from sortlab.utils.interfaces import IMetricCounter
-from sortlab.functions.interfaces import ISorter
-from sortlab.errors import SortingException, EmptyArrException
+from .shared_imports import *
+
 
 class BubbleSort(ISorter):
     def __init__(self, counter: IMetricCounter) -> None:
@@ -33,10 +31,16 @@ class BubbleSort(ISorter):
     def sort(self, arr: list[int]) -> list[int]:
         try:
             if not arr:
-                logger.warning(f"{self.__class__.__name__} - Lista vazia fornecida para ordenação.")
-                raise EmptyArrException(f"{self.__class__.__name__} - Lista vazia fornecida para ordenação.")
-            
+                logger.warning(
+                    f"{self.__class__.__name__} - Lista vazia fornecida para ordenação."
+                )
+                raise EmptyArrException(
+                    f"{self.__class__.__name__} - Lista vazia fornecida para ordenação."
+                )
+
             return self.bubble_sort(arr)
         except SortingException:
-            logger.error(f"Erro ao tentar ordenar a lista com {self.__class__.__name__}.")
+            logger.error(
+                f"Erro ao tentar ordenar a lista com {self.__class__.__name__}."
+            )
             raise

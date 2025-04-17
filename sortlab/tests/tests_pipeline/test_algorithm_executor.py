@@ -1,12 +1,13 @@
+from sortlab.pipeline.algorithm_executor import AlgorithmExecutor
+from sortlab.functions.interfaces import ISorter
+
 import pytest
 from unittest.mock import MagicMock, call
-from sortlab.pipeline. algorithm_executor import AlgorithmExecutor
-from sortlab.functions.interfaces import ISorter
 
 
 # Dummy sorter válido
 class DummySorter(ISorter):
-    def __init__(self, counter=None):
+    def __init__(self, _=None):
         pass
 
     def sort(self, data):
@@ -17,12 +18,14 @@ def test_validate_algorithms_accepts_only_isorter():
     class NotASorter:
         pass
 
-    with pytest.raises(TypeError, match="NotASorter deve ser uma classe que implementa ISorter"):
+    with pytest.raises(
+        TypeError, match="NotASorter deve ser uma classe que implementa ISorter"
+    ):
         AlgorithmExecutor([NotASorter], plots=[])
 
 
 def test_run_executes_all_algorithms_and_plots(monkeypatch):
-    # Arrange
+    # Arranjo
     mock_logger = MagicMock()
     mock_plot = MagicMock()
     mock_plot.__name__ = "mock_plot"
@@ -36,21 +39,23 @@ def test_run_executes_all_algorithms_and_plots(monkeypatch):
         algorithms=[DummySorter],
         plots=[mock_plot],
         tester_factory=mock_tester_factory,
-        logger=mock_logger
+        logger=mock_logger,
     )
 
     vector_sizes = [10, 20]
     base_vector = list(range(20, 0, -1))
 
-    # Act
+    # Ato
     executor.run(vector_sizes, base_vector)
 
     # Assert
-    mock_logger.info.assert_has_calls([
-        call("Iniciando execução dos algoritmos"),
-        call("Executando DummySorter"),
-        call("Gerando gráfico com mock_plot"),
-    ])
+    mock_logger.info.assert_has_calls(
+        [
+            call("Iniciando execução dos algoritmos"),
+            call("Executando DummySorter"),
+            call("Gerando gráfico com mock_plot"),
+        ]
+    )
 
     mock_tester_factory.assert_called_once_with(DummySorter)
     mock_tester_instance.run.assert_called_once_with(vector_sizes, base_vector)
@@ -70,7 +75,7 @@ def test_multiple_plots_are_generated():
         algorithms=[DummySorter],
         plots=[plot1, plot2],
         tester_factory=lambda algo: mock_tester,
-        logger=MagicMock()
+        logger=MagicMock(),
     )
 
     executor.run([10], [5, 4, 3, 2, 1])

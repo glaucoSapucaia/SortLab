@@ -1,7 +1,5 @@
-from settings.logger import logger
-from sortlab.utils.interfaces import IMetricCounter
-from sortlab.functions.interfaces import ISorter
-from sortlab.errors import SortingException, EmptyArrException
+from .shared_imports import *
+
 
 class InsertionSort(ISorter):
     def __init__(self, counter: IMetricCounter) -> None:
@@ -10,7 +8,9 @@ class InsertionSort(ISorter):
 
     def insertion_sort(self, arr: list[int]) -> list[int]:
         try:
-            logger.info(f"Iniciando InsertionSort para uma lista de tamanho {len(arr)}.")
+            logger.info(
+                f"Iniciando InsertionSort para uma lista de tamanho {len(arr)}."
+            )
             for j in range(1, len(arr)):
                 key = arr[j]
                 i = j - 1
@@ -38,10 +38,16 @@ class InsertionSort(ISorter):
     def sort(self, arr: list[int]) -> list[int]:
         try:
             if not arr:
-                logger.warning(f"{self.__class__.__name__} - Lista vazia fornecida para ordenação.")
-                raise EmptyArrException(f"{self.__class__.__name__} - Lista vazia fornecida para ordenação.")
-            
+                logger.warning(
+                    f"{self.__class__.__name__} - Lista vazia fornecida para ordenação."
+                )
+                raise EmptyArrException(
+                    f"{self.__class__.__name__} - Lista vazia fornecida para ordenação."
+                )
+
             return self.insertion_sort(arr)
         except SortingException:
-            logger.error(f"Erro ao tentar ordenar a lista com {self.__class__.__name__}.")
+            logger.error(
+                f"Erro ao tentar ordenar a lista com {self.__class__.__name__}."
+            )
             raise

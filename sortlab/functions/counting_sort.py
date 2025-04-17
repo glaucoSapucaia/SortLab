@@ -1,7 +1,5 @@
-from settings.logger import logger
-from sortlab.utils.interfaces import IMetricCounter
-from sortlab.functions.interfaces import ISorter
-from sortlab.errors import SortingException, EmptyArrException
+from .shared_imports import *
+
 
 class CountingSort(ISorter):
     def __init__(self, counter: IMetricCounter) -> None:
@@ -11,13 +9,16 @@ class CountingSort(ISorter):
     def counting_sort(self, input_array: list[int]) -> list[int]:
         try:
             if not input_array:
-                logger.warning(f"{self.__class__.__name__} - Lista vazia fornecida para ordenação.")
-                raise EmptyArrException(f"{self.__class__.__name__} - Lista vazia fornecida para ordenação.")
+                logger.warning(
+                    f"{self.__class__.__name__} - Lista vazia fornecida para ordenação."
+                )
+                raise EmptyArrException(
+                    f"{self.__class__.__name__} - Lista vazia fornecida para ordenação."
+                )
 
             k = max(input_array) + 1
             sorted_array = [0] * len(input_array)
             count_array = [0] * k
-
             # logger.info(f"Iniciando CountingSort para uma lista de tamanho {len(input_array)} com k = {k}.")
 
             # Contagem das ocorrências
@@ -55,5 +56,7 @@ class CountingSort(ISorter):
         try:
             return self.counting_sort(input_array)
         except SortingException:
-            logger.error(f"Erro ao tentar ordenar a lista com {self.__class__.__name__}.")
+            logger.error(
+                f"Erro ao tentar ordenar a lista com {self.__class__.__name__}."
+            )
             raise

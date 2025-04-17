@@ -1,19 +1,20 @@
-from settings.logger import logger
-
-from settings.paths import config
-
-pdf_output = config.get_path('FINAL_PDF_PATH')
-pdf_temp_path = config.get_path('TEMP_PDF_PATH')
-
 from sortlab.errors import ImageSaveException, ImageSearchException, ReportException
 from sortlab.scripts.html_link_page import generate_html_links_page
+from settings.logger import logger
+from settings.paths import config
+
 from typing import TYPE_CHECKING
 from pypdf import PdfWriter
 from PIL import Image
 import inspect
 
+
 if TYPE_CHECKING:
     from pathlib import Path
+
+pdf_output = config.get_path("FINAL_PDF_PATH")
+pdf_temp_path = config.get_path("TEMP_PDF_PATH")
+
 
 def get_image_paths() -> list[str]:
     try:
@@ -23,12 +24,15 @@ def get_image_paths() -> list[str]:
         return result
     except Exception as e:
         logger.error(f"Erro ao buscar imagens: {e}")
-        raise ImageSearchException(f"Erro em {inspect.currentframe().f_code.co_name}: {e}")
+        raise ImageSearchException(
+            f"Erro em {inspect.currentframe().f_code.co_name}: {e}"
+        )
 
-def save_images_to_pdf(image_paths: list['Path'], temp_pdf_path: 'Path') -> None:
+
+def save_images_to_pdf(image_paths: list["Path"], temp_pdf_path: "Path") -> None:
     try:
         logger.info("Iniciando o processo de conversão das imagens para PDF.")
-        images = [Image.open(img).convert('RGB') for img in image_paths]
+        images = [Image.open(img).convert("RGB") for img in image_paths]
         if images:
             images[0].save(temp_pdf_path, save_all=True, append_images=images[1:])
             logger.info(f"PDF temporário gerado em: {temp_pdf_path}")
@@ -36,7 +40,10 @@ def save_images_to_pdf(image_paths: list['Path'], temp_pdf_path: 'Path') -> None
             logger.warning("Nenhuma imagem encontrada para salvar como PDF.")
     except Exception as e:
         logger.error(f"Erro ao salvar as imagens no PDF: {e}")
-        raise ImageSaveException(f"Erro em {inspect.currentframe().f_code.co_name}: {e}")
+        raise ImageSaveException(
+            f"Erro em {inspect.currentframe().f_code.co_name}: {e}"
+        )
+
 
 def generate_pdf_report() -> None:
     try:

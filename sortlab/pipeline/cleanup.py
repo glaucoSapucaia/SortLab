@@ -1,6 +1,7 @@
 from settings.logger import logger
 from sortlab.utils.delete_temp_files import clean_temp_files
 
+
 class CleanupService:
     @staticmethod
     def clean_temp_files() -> None:

@@ -1,11 +1,13 @@
-import pytest
-from unittest.mock import MagicMock
 from sortlab.services import PerformanceTester
 from sortlab.errors import MetricsException
+
+import pytest
+
 
 @pytest.fixture
 def dummy_sorter_class():
     """Mock de uma classe que implementa ISorter"""
+
     class DummySorter:
         __name__ = "DummySorter"
 
@@ -17,6 +19,7 @@ def dummy_sorter_class():
             data.sort()
 
     return DummySorter
+
 
 def test_run_returns_correct_structure(dummy_sorter_class):
     tester = PerformanceTester(dummy_sorter_class)
@@ -31,6 +34,7 @@ def test_run_returns_correct_structure(dummy_sorter_class):
     assert all(isinstance(c, int) for c in comparisons)
     assert name == "DummySorter"
 
+
 def test_sorter_exception_raises_metrics_exception(dummy_sorter_class):
     class FailingSorter(dummy_sorter_class):
         def sort(self, data):
@@ -43,6 +47,7 @@ def test_sorter_exception_raises_metrics_exception(dummy_sorter_class):
         tester.run([5], base_vector)
 
     assert "Erro no PerformanceTester" in str(exc_info.value)
+
 
 def test_base_vector_is_not_modified(dummy_sorter_class):
     tester = PerformanceTester(dummy_sorter_class)

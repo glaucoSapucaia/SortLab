@@ -1,40 +1,44 @@
 from settings.logger import logger
+from settings.paths import config
 from sortlab.errors import LinksPDFException
+
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
-
-from settings.paths import config
-
-html_folder = config.get_path('LINK_FOLDER')
-temp_link = config.get_path('TEMP_LINK_PAGE')
-
-
 from typing import TYPE_CHECKING
 import inspect
 import os
 
+
 if TYPE_CHECKING:
     from pathlib import Path
 
-def generate_html_links_page() -> 'Path':
+html_folder = config.get_path("LINK_FOLDER")
+temp_link = config.get_path("TEMP_LINK_PAGE")
+
+
+def generate_html_links_page() -> "Path":
     try:
-        logger.info(f"Verificando a existência do diretório {html_folder} para arquivos HTML.")
-        
+        logger.info(
+            f"Verificando a existência do diretório {html_folder} para arquivos HTML."
+        )
+
         # Verificar se o diretório de arquivos HTML existe
         if not os.path.exists(html_folder):
             logger.error(f"O diretório {html_folder} não foi encontrado.")
             raise FileNotFoundError(f"O diretório {html_folder} não foi encontrado.")
-        
+
         logger.info(f"Iniciando a geração do PDF com links interativos.")
-        
+
         # Criar o canvas para gerar o PDF
         c = canvas.Canvas(str(temp_link), pagesize=A4)
         width, height = A4
 
         # Título grande
         c.setFont("Helvetica-Bold", 24)
-        c.drawCentredString(width / 2, height - 1 * inch, "LINKS PARA GRÁFICOS INTERATIVOS")
+        c.drawCentredString(
+            width / 2, height - 1 * inch, "LINKS PARA GRÁFICOS INTERATIVOS"
+        )
 
         # Fonte maior para os links
         c.setFont("Helvetica", 16)
@@ -49,7 +53,7 @@ def generate_html_links_page() -> 'Path':
             raise FileNotFoundError(f"Nenhum arquivo HTML encontrado em {html_folder}.")
 
         logger.info(f"Arquivos HTML encontrados: {html_files}")
-        
+
         for filename in html_files:
             if filename.endswith(".html"):
                 filepath = os.path.abspath(os.path.join(html_folder, filename))
@@ -57,10 +61,7 @@ def generate_html_links_page() -> 'Path':
 
                 # Texto do link
                 c.drawString(1.5 * inch, y, f"• {display_text}")
-                c.linkURL(
-                    f"file://{filepath}",
-                    (1.5 * inch, y - 4, 6.5 * inch, y + 16)
-                )
+                c.linkURL(f"file://{filepath}", (1.5 * inch, y - 4, 6.5 * inch, y + 16))
 
                 y -= spacing
 
