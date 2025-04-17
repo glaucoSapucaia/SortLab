@@ -8,7 +8,7 @@ pdf_temp_path = config.get_path('TEMP_PDF_PATH')
 from sortlab.errors import ImageSaveException, ImageSearchException, ReportException
 from sortlab.scripts.html_link_page import generate_html_links_page
 from typing import TYPE_CHECKING
-from PyPDF2 import PdfMerger
+from pypdf import PdfWriter
 from PIL import Image
 import inspect
 
@@ -55,7 +55,7 @@ def generate_pdf_report() -> None:
         # 3. Mesclar os dois PDFs
         if links_pdf.exists() and pdf_temp_path.exists():
             logger.info("Mesclando os PDFs gerados.")
-            merger = PdfMerger()
+            merger = PdfWriter()
             merger.append(str(links_pdf))
             merger.append(str(pdf_temp_path))
             merger.write(pdf_output)
