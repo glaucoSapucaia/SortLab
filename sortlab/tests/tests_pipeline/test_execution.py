@@ -4,7 +4,7 @@ from sortlab.pipeline import AlgorithmRunner
 from typing import Optional
 
 class TestAlgorithmRunner:
-    @patch('sortlab.algorithm_runner.AlgorithmExecutor')
+    @patch('sortlab.pipeline.execution.AlgorithmRunner')
     def test_run_algorithms_with_custom_executor(self, mock_executor):
         """Testa se run_algorithms usa o executor fornecido"""
         mock_executor_instance = MagicMock()
@@ -16,7 +16,7 @@ class TestAlgorithmRunner:
         mock_executor_instance.run.assert_called_once_with(sizes, base_vector)
         mock_executor.assert_not_called()
 
-    @patch('sortlab.algorithm_runner.AlgorithmExecutor')
+    @patch('sortlab.pipeline.execution.AlgorithmExecutor')
     def test_run_algorithms_with_default_executor(self, mock_executor):
         """Testa se run_algorithms cria um executor padrão quando nenhum é fornecido"""
         mock_executor_instance = MagicMock()
@@ -29,7 +29,7 @@ class TestAlgorithmRunner:
         mock_executor.assert_called_once()
         mock_executor_instance.run.assert_called_once_with(sizes, base_vector)
 
-    @patch('sortlab.algorithm_runner.random.randint')
+    @patch('sortlab.pipeline.execution.random.randint')
     def test_generate_random_vector(self, mock_randint):
         """Testa a geração de vetor aleatório"""
         mock_randint.return_value = 42
@@ -41,8 +41,8 @@ class TestAlgorithmRunner:
         assert mock_randint.call_count == size
         mock_randint.assert_called_with(0, 1000)
 
-    @patch('sortlab.algorithm_runner.AlgorithmRunner.run_algorithms')
-    @patch('sortlab.algorithm_runner.AlgorithmRunner._generate_random_vector')
+    @patch('sortlab.pipeline.execution.AlgorithmRunner.run_algorithms')
+    @patch('sortlab.pipeline.execution.AlgorithmRunner._generate_random_vector')
     def test_execute_default_algorithms(self, mock_generate, mock_run):
         """Testa o método execute_default_algorithms"""
         mock_generate.return_value = [1, 2, 3]
@@ -50,7 +50,7 @@ class TestAlgorithmRunner:
         AlgorithmRunner.execute_default_algorithms()
         
         mock_generate.assert_called_once_with(max(AlgorithmRunner.DEFAULT_SIZES))
-        mock_run.assert_called_once_with(AlgorithmRunner.DEFAULT_SIZES, [1, 2, 3], None)
+        mock_run.assert_called_once_with(AlgorithmRunner.DEFAULT_SIZES, [1, 2, 3])
 
     def test_default_sizes(self):
         """Testa se DEFAULT_SIZES tem os valores esperados"""

@@ -13,7 +13,7 @@ def dummy_sorter_class():
             self.counter = counter
 
         def sort(self, data):
-            self.counter.increment(10)
+            self.counter.increase()
             data.sort()
 
     return DummySorter

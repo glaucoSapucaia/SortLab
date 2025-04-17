@@ -40,7 +40,7 @@ class TestReportGenerator:
         )
         
         # Verifica que o log de sucesso não foi chamado
-        assert "sucesso" not in [call[0][0] for call in mock_logger.info.mock_calls]
+        assert all("sucesso" not in call.args[0] for call in mock_logger.info.mock_calls)
 
     @patch('sortlab.pipeline.report.generate_pdf_report')
     @patch('sortlab.pipeline.report.logger')
