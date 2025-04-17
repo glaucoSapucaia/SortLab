@@ -15,16 +15,30 @@ def plot_interactive(
     comparisons: list[int],
     algorithm_name: str,
 ) -> None:
-    try:
-        logger.info(
-            f"Iniciando a criação do gráfico interativo para o algoritmo {algorithm_name}."
-        )
+    """Gera e salva um gráfico interativo HTML com o desempenho do algoritmo.
 
+    Cria um gráfico duplo com eixos Y separados mostrando:
+    - Tempo de execução em microssegundos (eixo Y esquerdo)
+    - Número de comparações/trocas (eixo Y direito)
+
+    Args:
+        vector_sizes: Lista de tamanhos de vetores testados
+        times: Lista de tempos de execução em segundos
+        comparisons: Lista de comparações/trocas realizadas
+        algorithm_name: Nome do algoritmo para título do gráfico
+
+    Raises:
+        PlotInteractiveException: Se ocorrer qualquer erro durante a geração
+    """
+    try:
+        logger.info(f"Criando gráfico interativo para {algorithm_name}")
+
+        # Converter tempos para microssegundos
         times_microseconds = [t * 1_000_000 for t in times]
 
         fig = go.Figure()
 
-        # Adicionando trace para tempo
+        # Adicionar traço para tempo de execução
         fig.add_trace(
             go.Scatter(
                 x=vector_sizes,
@@ -37,7 +51,7 @@ def plot_interactive(
             )
         )
 
-        # Adicionando trace para comparações/trocas
+        # Adicionar traço para comparações
         fig.add_trace(
             go.Scatter(
                 x=vector_sizes,
@@ -51,9 +65,9 @@ def plot_interactive(
             )
         )
 
-        # Atualizando o layout do gráfico
+        # Configurar layout do gráfico
         fig.update_layout(
-            title=f"Desempenho do Algoritmo {algorithm_name}",
+            title=f"Desempenho do {algorithm_name}",
             xaxis=dict(title="Tamanho do Vetor"),
             yaxis=dict(
                 title=dict(text="Tempo (μs)", font=dict(color="yellow")),
@@ -80,48 +94,23 @@ def plot_interactive(
                 xanchor="center",
                 yanchor="bottom",
                 orientation="h",
-                traceorder="normal",
-                font=dict(size=12),
-                bgcolor="rgba(0, 0, 0, 0)",
-                borderwidth=1,
             ),
         )
 
-        # Criar diretório caso não exista
-        try:
-            os.makedirs(html_folder, exist_ok=True)
-            logger.info(f"Diretório {html_folder} criado com sucesso ou já existe.")
-        except Exception as e:
-            logger.error(f"Erro ao criar diretório {html_folder}: {e}")
-            raise PlotInteractiveException(f"Erro ao criar diretório: {e}")
+        # Criar diretório se não existir
+        os.makedirs(html_folder, exist_ok=True)
 
+        # Definir caminho do arquivo
         html_output_path = html_folder / f"{algorithm_name}_interativo_.html"
 
-        # Remover arquivo existente, se necessário
+        # Remover arquivo existente
         if os.path.exists(html_output_path):
-            try:
-                os.remove(html_output_path)
-                logger.info(
-                    f"Arquivo existente {html_output_path} removido com sucesso."
-                )
-            except Exception as e:
-                logger.error(
-                    f"Erro ao remover arquivo existente {html_output_path}: {e}"
-                )
-                raise PlotInteractiveException(
-                    f"Erro ao remover arquivo existente: {e}"
-                )
+            os.remove(html_output_path)
 
         # Salvar gráfico como HTML
-        try:
-            fig.write_html(str(html_output_path))
-            logger.info(f"Gráfico interativo salvo com sucesso em {html_output_path}.")
-        except Exception as e:
-            logger.error(f"Erro ao salvar gráfico HTML em {html_output_path}: {e}")
-            raise PlotInteractiveException(f"Erro ao salvar gráfico HTML: {e}")
+        fig.write_html(str(html_output_path))
+        logger.info(f"Gráfico salvo em {html_output_path}")
 
     except Exception as e:
-        logger.error(f"Erro na função '{plot_interactive.__name__}': {e}")
-        raise PlotInteractiveException(
-            f"Erro na função '{plot_interactive.__name__}': {e}"
-        ) from e
+        logger.error(f"Erro ao gerar gráfico: {e}")
+        raise PlotInteractiveException(f"Erro ao gerar gráfico: {e}") from e

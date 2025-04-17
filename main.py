@@ -8,6 +8,17 @@ from sortlab.pipeline import (
 
 
 def main() -> None:
+    """Orquestra a execução dos algoritmos de ordenação, geração de relatório e limpeza.
+
+    Esta função é o ponto de entrada principal do pipeline do SortLab:
+    1. Executa algoritmos de ordenação pré-definidos.
+    2. Gera um relatório com os resultados.
+    3. Abre o relatório no navegador padrão.
+    4. Remove arquivos temporários.
+
+    Raises:
+        Exception: Se qualquer etapa falhar, registra o erro e relança a exceção.
+    """
     try:
         # 1. Executa os algoritmos de ordenação
         AlgorithmRunner.execute_default_algorithms()

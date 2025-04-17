@@ -4,12 +4,13 @@ from sortlab.errors import PlotStaticException
 
 import matplotlib
 
-matplotlib.use("QtAgg")  # Backend alternativo ao tkinter (Erros com ambiente vrtual)
+matplotlib.use("QtAgg")  # Backend alternativo para evitar conflitos
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 sns.set_theme(style="darkgrid")
+
 
 data_folder = config.get_path("STATIC_FOLDER")
 
@@ -20,18 +21,29 @@ def plot_static(
     comparisons: list[int],
     algorithm_name: str,
 ) -> None:
+    """Gera e salva um gráfico estático com o desempenho do algoritmo.
+
+    Cria uma figura com dois subplots lado a lado mostrando:
+    - Tempo de execução em segundos (gráfico da esquerda)
+    - Número de comparações/trocas (gráfico da direita)
+
+    Args:
+        vector_sizes: Lista de tamanhos de vetores testados
+        times: Tempos de execução em segundos para cada tamanho
+        comparisons: Número de operações para cada tamanho
+        algorithm_name: Nome do algoritmo para títulos dos gráficos
+
+    Raises:
+        PlotStaticException: Se ocorrer erro durante a geração ou salvamento
+    """
     try:
-        logger.info(
-            f"Iniciando a criação do gráfico estático para o algoritmo {algorithm_name}."
-        )
+        logger.info(f"Criando gráfico estático para {algorithm_name}")
 
-        # Definindo a paleta de cores do Seaborn
+        # Configuração visual
         color_palette = sns.color_palette("Set2", 2)
+        fig, axes = plt.subplots(1, 2, figsize=(12, 5))
 
-        # Criar figura e eixos
-        _, axes = plt.subplots(1, 2, figsize=(12, 5))
-
-        # Plotando o tempo de execução
+        # Gráfico de tempo de execução
         axes[0].plot(
             vector_sizes,
             times,
@@ -47,9 +59,9 @@ def plot_static(
         axes[0].set_xlabel("Tamanho do Vetor", fontsize=14)
         axes[0].set_ylabel("Tempo (s)", fontsize=14)
         axes[0].grid(True)
-        axes[0].ticklabel_format(style="plain")  # Evita notação científica
+        axes[0].ticklabel_format(style="plain")
 
-        # Plotando as comparações/trocas
+        # Gráfico de comparações/trocas
         axes[1].plot(
             vector_sizes,
             comparisons,
@@ -60,37 +72,26 @@ def plot_static(
             markersize=6,
         )
         axes[1].set_title(
-            f"Comparações/Trocas - {algorithm_name}", fontsize=16, fontweight="bold"
+            f"Operações - {algorithm_name}", fontsize=16, fontweight="bold"
         )
         axes[1].set_xlabel("Tamanho do Vetor", fontsize=14)
         axes[1].set_ylabel("Comparações/Trocas", fontsize=14)
         axes[1].grid(True)
         axes[1].ticklabel_format(style="plain")
 
-        # Ajustando o layout para não sobrepor os elementos
         plt.tight_layout()
 
-        try:
-            # Garantir que a pasta de saída exista
-            data_folder.mkdir(parents=True, exist_ok=True)
-            logger.info(f"Diretório {data_folder} criado com sucesso ou já existe.")
-        except Exception as e:
-            logger.error(f"Erro ao criar diretório {data_folder}: {e}")
-            raise PlotStaticException(f"Erro ao criar diretório: {e}")
+        # Garantir diretório existe
+        data_folder.mkdir(parents=True, exist_ok=True)
 
+        # Caminho de saída
         output_path = data_folder / f"{algorithm_name}_estatico_.png"
 
-        # Salvando a imagem com resolução ajustada
-        try:
-            plt.savefig(output_path, dpi=150)
-            plt.close()
-            logger.info(f"Gráfico estático salvo com sucesso em {output_path}.")
-        except Exception as e:
-            logger.error(f"Erro ao salvar gráfico estático em {output_path}: {e}")
-            raise PlotStaticException(f"Erro ao salvar gráfico estático: {e}")
+        # Salvar figura
+        plt.savefig(output_path, dpi=150)
+        plt.close()
+        logger.info(f"Gráfico salvo em {output_path}")
 
     except Exception as e:
-        logger.error(f"Erro na função '{plot_static.__name__}': {e}")
-        raise PlotStaticException(
-            f"Erro na função '{plot_static.__name__}': {e}"
-        ) from e
+        logger.error(f"Erro ao gerar gráfico estático: {e}")
+        raise PlotStaticException(f"Erro ao gerar gráfico estático: {e}") from e

@@ -7,24 +7,31 @@ from unittest.mock import MagicMock, call
 
 # Dummy sorter válido
 class DummySorter(ISorter):
+    """Implementação mock de ISorter para testes."""
+
     def __init__(self, _=None):
+        """Inicializador vazio para o sorter mock."""
         pass
 
     def sort(self, data):
+        """Método de ordenação que simplesmente ordena os dados in-place."""
         data.sort()
 
 
 def test_validate_algorithms_accepts_only_isorter():
+    """Verifica se apenas classes que implementam ISorter são aceitas."""
+
     class NotASorter:
+        """Classe que não implementa ISorter para testar validação."""
+
         pass
 
-    with pytest.raises(
-        TypeError, match="NotASorter deve ser uma classe que implementa ISorter"
-    ):
+    with pytest.raises(TypeError, match="NotASorter deve implementar ISorter"):
         AlgorithmExecutor([NotASorter], plots=[])
 
 
 def test_run_executes_all_algorithms_and_plots(monkeypatch):
+    """Testa se o executor roda todos algoritmos e gera os plots corretamente."""
     # Arranjo
     mock_logger = MagicMock()
     mock_plot = MagicMock()
@@ -63,6 +70,7 @@ def test_run_executes_all_algorithms_and_plots(monkeypatch):
 
 
 def test_multiple_plots_are_generated():
+    """Verifica se múltiplos plots são gerados quando fornecidos."""
     plot1 = MagicMock()
     plot1.__name__ = "plot1"
     plot2 = MagicMock()
