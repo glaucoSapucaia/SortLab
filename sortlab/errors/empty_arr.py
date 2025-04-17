@@ -1,5 +1,6 @@
 class EmptyArrException(Exception):
     """
-    Exceção personalizada para erros relacionados à ordenação.
+    Exceção personalizada para erros relacionados à arrays.
     """
+
     pass

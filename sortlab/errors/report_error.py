@@ -1,5 +1,6 @@
 class ReportException(Exception):
     """
-    Exceção personalizada para erros relacionados à ordenação.
+    Exceção personalizada para erros relacionados à criação do relatório.
     """
+
     pass

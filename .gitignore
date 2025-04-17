@@ -1,13 +1,49 @@
-# project
+# 🐍 Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# 📦 Ambientes virtuais
 .env
-venv
-__pycache__
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
 
-# tests
-.pytest_cache
-htmlcov
+# 📋 Arquivos de configuração e ambiente
+*.env
+*.env.*
+
+# 🧪 Testes e cobertura
+.pytest_cache/
 .coverage
+htmlcov/
+coverage.xml
+.cache/
 
-# data
-logs
-data
+# 📊 Dados gerados / temporários
+data/
+logs/
+*.log
+*.sqlite3
+*.db
+
+# 🧠 IDEs e editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 📦 Pacotes e dependências
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# 🧹 Outras
+.DS_Store
+Thumbs.db

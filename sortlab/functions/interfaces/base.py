@@ -1,7 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import List
+
 
 class ISorter(ABC):
+    """Interface abstrata para algoritmos de ordenação.
+
+    Todas as implementações concretas devem fornecer um método `sort`.
+    """
+
     @abstractmethod
-    def sort(self, arr: List[int]) -> List[int]:
+    def sort(self, arr: list[int]) -> list[int]:
         pass

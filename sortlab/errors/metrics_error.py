@@ -1,5 +1,6 @@
 class MetricsException(Exception):
     """
-    Exceção personalizada para erros relacionados à ordenação.
+    Exceção personalizada para erros relacionados as metricas.
     """
+
     pass
