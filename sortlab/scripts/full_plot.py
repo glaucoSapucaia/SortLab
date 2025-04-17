@@ -1,6 +1,6 @@
-from logger import logger
+from settings.logger import logger
 
-from paths import config
+from settings.paths import config
 
 pdf_output = config.get_path('FINAL_PDF_PATH')
 pdf_temp_path = config.get_path('TEMP_PDF_PATH')

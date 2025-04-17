@@ -1,7 +1,7 @@
 import shutil
-from logger import logger
+from settings.logger import logger
 
-from paths import config
+from settings.paths import config
 
 static_folder = config.get_path('STATIC_FOLDER')
 interactive_images_folder = config.get_path('INTERACTIVE_IMAGES_FOLDER')

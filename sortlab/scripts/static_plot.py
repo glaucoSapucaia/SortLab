@@ -2,13 +2,13 @@ import matplotlib
 
 matplotlib.use('QtAgg') # backend alternativo ao tkinter
 
-from logger import logger
+from settings.logger import logger
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 from sortlab.errors import PlotStaticException
 
-from paths import config
+from settings.paths import config
 
 data_folder = config.get_path('STATIC_FOLDER')
 

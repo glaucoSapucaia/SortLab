@@ -1,7 +1,7 @@
-from logger import logger
+from settings.logger import logger
 import webbrowser
 
-from paths import config
+from settings.paths import config
 
 class ReportViewer:
     @staticmethod

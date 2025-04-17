@@ -20,7 +20,7 @@ de log recebam apenas mensagens de um nível exato.
 import logging
 import os
 
-from paths import config
+from .paths import config
 
 
 # paths

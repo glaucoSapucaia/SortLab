@@ -1,9 +1,9 @@
 import os
-from logger import logger
+from settings.logger import logger
 from sortlab.errors import PlotInteractiveException
 import plotly.graph_objects as go
 
-from paths import config
+from settings.paths import config
 
 html_folder = config.get_path('LINK_FOLDER')
 

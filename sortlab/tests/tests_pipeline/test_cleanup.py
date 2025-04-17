@@ -1,7 +1,7 @@
 import pytest
 from unittest import mock
 from sortlab.utils.delete_temp_files import clean_temp_files
-from logger import logger
+from settings.logger import logger
 from sortlab.pipeline import CleanupService  # Ajuste o import conforme necessário
 
 @mock.patch('sortlab.pipeline.cleanup.logger')

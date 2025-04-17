@@ -1,7 +1,7 @@
 from typing import Callable, Type
 from sortlab.functions.interfaces import ISorter
 from sortlab.services.performance_tester import PerformanceTester
-from logger import logger
+from settings.logger import logger
 
 class AlgorithmExecutor:
     def __init__(self, 

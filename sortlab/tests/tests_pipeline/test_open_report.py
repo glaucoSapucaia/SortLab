@@ -1,9 +1,9 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from sortlab.pipeline import ReportViewer
-from paths import config
+from settings.paths import config
 import webbrowser
-from logger import logger
+from settings.logger import logger
 
 class TestReportViewer:
     @patch('sortlab.pipeline.open_report.webbrowser.open')

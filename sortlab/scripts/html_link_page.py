@@ -1,10 +1,10 @@
-from logger import logger
+from settings.logger import logger
 from sortlab.errors import LinksPDFException
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 
-from paths import config
+from settings.paths import config
 
 html_folder = config.get_path('LINK_FOLDER')
 temp_link = config.get_path('TEMP_LINK_PAGE')

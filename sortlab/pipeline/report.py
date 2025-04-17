@@ -1,4 +1,4 @@
-from logger import logger
+from settings.logger import logger
 from sortlab.scripts import generate_pdf_report
 
 class ReportGenerator:

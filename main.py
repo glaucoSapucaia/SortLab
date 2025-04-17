@@ -4,7 +4,7 @@ from sortlab.pipeline import (
     ReportViewer,
     CleanupService
 )
-from logger import logger
+from settings.logger import logger
 
 def main() -> None:
     try:

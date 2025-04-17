@@ -6,7 +6,7 @@ class EnvConfig:
     """Gerenciador de configurações e paths do projeto."""
     
     def __init__(self):
-        self.BASE_DIR = Path(__file__).resolve().parent
+        self.BASE_DIR = Path(__file__).resolve().parent.parent
         self.PROJECT_ROOT = self.BASE_DIR / 'sortlab'
         
         # Paths principais

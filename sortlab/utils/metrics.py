@@ -1,4 +1,4 @@
-from logger import logger
+from settings.logger import logger
 from sortlab.utils.interfaces import IMetricCounter
 
 class MetricCounter(IMetricCounter):

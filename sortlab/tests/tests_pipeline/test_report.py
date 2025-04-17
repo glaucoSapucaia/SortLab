@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from sortlab.pipeline import ReportGenerator
 from sortlab.scripts import generate_pdf_report
-from logger import logger
+from settings.logger import logger
 
 class TestReportGenerator:
     @patch('sortlab.pipeline.report.generate_pdf_report')

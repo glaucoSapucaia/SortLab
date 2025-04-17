@@ -2,7 +2,7 @@ from time import perf_counter
 from sortlab.utils.metrics import MetricCounter
 from sortlab.errors import MetricsException
 from typing import TYPE_CHECKING
-from logger import logger
+from settings.logger import logger
 
 if TYPE_CHECKING:
     from sortlab.functions.interfaces import ISorter # pragma: no cover
