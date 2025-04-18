@@ -1,6 +1,6 @@
 from sortlab.functions.interfaces import ISorter
 from sortlab.services.performance_tester import PerformanceTester
-from settings.logger import logger
+from sortlab.settings import logger
 
 from collections.abc import Callable
 

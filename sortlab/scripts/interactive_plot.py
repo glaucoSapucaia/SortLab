@@ -1,5 +1,4 @@
-from settings.logger import logger
-from settings.paths import config
+from sortlab.settings import *
 from sortlab.errors import PlotInteractiveException
 
 import plotly.graph_objects as go

@@ -1,7 +1,6 @@
 from sortlab.errors import ImageSaveException, ImageSearchException, ReportException
 from sortlab.scripts.html_link_page import generate_html_links_page
-from settings.logger import logger
-from settings.paths import config
+from sortlab.settings import *
 
 from typing import TYPE_CHECKING
 from pypdf import PdfWriter

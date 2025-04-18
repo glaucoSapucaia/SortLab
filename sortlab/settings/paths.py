@@ -10,7 +10,7 @@ class EnvConfig:
 
     def __init__(self) -> None:
         """Inicializa paths padrão do projeto e valida sua estrutura."""
-        self.BASE_DIR = Path(__file__).resolve().parent.parent
+        self.BASE_DIR = Path(__file__).resolve().parent.parent.parent
         self.PROJECT_ROOT = self.BASE_DIR / "sortlab"
 
         # Paths principais
