@@ -1,4 +1,4 @@
-from settings.logger import logger
+from sortlab.settings import logger
 from sortlab.utils.metrics import MetricCounter
 from sortlab.errors import MetricsException
 

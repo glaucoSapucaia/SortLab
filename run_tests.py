@@ -1,4 +1,4 @@
-from settings.paths import config
+from sortlab.settings import config
 
 import pytest
 import os
